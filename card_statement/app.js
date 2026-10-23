@@ -49,7 +49,15 @@ async function initLIFF() {
 // ==============================
 // 2. 共用 API 呼叫函式
 // ==============================
+
 async function apiGet(path) {
+  // 每次呼叫 API 前，從 LIFF SDK 取得目前的 ID Token
+  idToken = liff.getIDToken();
+
+  if (!idToken) {
+    throw new Error("無法取得 LINE ID Token，請重新登入");
+  }
+
   const response = await fetch(`${API_BASE}${path}`, {
     method: "GET",
     headers: {
@@ -57,12 +65,28 @@ async function apiGet(path) {
     }
   });
 
-  if (!response.ok) {
-    const message = await response.text();
-    throw new Error(`API 錯誤 (${response.status})：${message}`);
+  // 讀取回應內容
+  const message = await response.text();
+
+  let data;
+
+  try {
+    data = JSON.parse(message);
+  } catch {
+    data = { error: message };
   }
 
-  return response.json();
+  if (!response.ok) {
+    throw new Error(
+      `API 錯誤 (${response.status})：${
+        data.error_description ||
+        data.error ||
+        message
+      }`
+    );
+  }
+
+  return data;
 }
 
 
