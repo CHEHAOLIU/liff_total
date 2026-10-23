@@ -73,20 +73,21 @@ async function apiGet(path) {
 async function loadCards() {
     const cardSelect = document.getElementById("cardSelect");
 
+    console.log("1. loadCards 開始執行");
+    console.log("2. 找到下拉選單：", cardSelect);
+
     try {
         const data = await apiGet("/api/cards");
 
-        console.log("信用卡 API 回傳資料：", data);
+        console.log("3. API 回傳資料：", data);
+        console.log("4. 是否為陣列：", Array.isArray(data));
 
-        // 確認 API 回傳的是陣列
         if (!Array.isArray(data)) {
-            throw new Error("信用卡 API 回傳格式不正確，預期為陣列");
+            throw new Error("API 回傳的不是陣列");
         }
 
-        // 清空下拉選單
         cardSelect.innerHTML = '<option value="">請選擇信用卡</option>';
 
-        // 將信用卡名稱加入下拉選單
         data.forEach(cardName => {
             const option = document.createElement("option");
             option.value = cardName;
@@ -94,11 +95,10 @@ async function loadCards() {
             cardSelect.appendChild(option);
         });
 
-        setStatus("請選擇信用卡");
+        console.log("5. 下拉選單選項：", cardSelect.innerHTML);
 
     } catch (error) {
         console.error("載入信用卡失敗：", error);
-        setStatus(`載入信用卡失敗：${error.message}`);
     }
 }
 
