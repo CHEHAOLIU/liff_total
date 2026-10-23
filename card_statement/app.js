@@ -71,38 +71,35 @@ async function apiGet(path) {
 // GET /api/cards
 // ==============================
 async function loadCards() {
-  const data = await apiGet("/api/cards");
+    const cardSelect = document.getElementById("cardSelect");
 
-  // 預期格式：{ "cards": [{ "id": "...", "name": "..." }] }
-  const cards = data.cards;
+    try {
+        const data = await apiGet("/api/cards");
 
-  if (!Array.isArray(cards)) {
-    throw new Error("信用卡 API 回傳格式不正確");
-  }
+        console.log("信用卡 API 回傳資料：", data);
 
-  cardSelect.innerHTML =
-    '<option value="">請選擇信用卡</option>';
+        // 確認 API 回傳的是陣列
+        if (!Array.isArray(data)) {
+            throw new Error("信用卡 API 回傳格式不正確，預期為陣列");
+        }
 
-  cards.forEach(card => {
-    const option = document.createElement("option");
+        // 清空下拉選單
+        cardSelect.innerHTML = '<option value="">請選擇信用卡</option>';
 
-    // 同時支援物件格式與純文字格式
-    option.value = typeof card === "string"
-      ? card
-      : card.id ?? card.card_id ?? card.name;
+        // 將信用卡名稱加入下拉選單
+        data.forEach(cardName => {
+            const option = document.createElement("option");
+            option.value = cardName;
+            option.textContent = cardName;
+            cardSelect.appendChild(option);
+        });
 
-    option.textContent = typeof card === "string"
-      ? card
-      : card.name ?? card.card_name ?? card.id;
+        setStatus("請選擇信用卡");
 
-    cardSelect.appendChild(option);
-  });
-
-  cardSelect.disabled = cards.length === 0;
-
-  if (cards.length === 0) {
-    setStatus("目前沒有可查詢的信用卡", "warning");
-  }
+    } catch (error) {
+        console.error("載入信用卡失敗：", error);
+        setStatus(`載入信用卡失敗：${error.message}`);
+    }
 }
 
 
