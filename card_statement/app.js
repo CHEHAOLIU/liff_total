@@ -73,14 +73,14 @@ async function apiGet(path) {
 async function loadCards() {
     const cardSelect = document.getElementById("cardSelect");
 
-    console.log("1. loadCards 開始執行");
-    console.log("2. 找到下拉選單：", cardSelect);
+    //console.log("1. loadCards 開始執行");
+    //console.log("2. 找到下拉選單：", cardSelect);
 
     try {
         const data = await apiGet("/api/cards");
 
-        console.log("3. API 回傳資料：", data);
-        console.log("4. 是否為陣列：", Array.isArray(data));
+        //console.log("3. API 回傳資料：", data);
+        //console.log("4. 是否為陣列：", Array.isArray(data));
 
         if (!Array.isArray(data)) {
             throw new Error("API 回傳的不是陣列");
@@ -97,9 +97,9 @@ async function loadCards() {
 
         // 所有信用卡加入後，解除下拉選單停用
         cardSelect.disabled = false;
-        console.log("下拉選單 disabled 狀態：", cardSelect.disabled);
-        console.log("目前選項數量：", cardSelect.options.length);
-        console.log("5. 下拉選單選項：", cardSelect.innerHTML);
+        //console.log("下拉選單 disabled 狀態：", cardSelect.disabled);
+        //console.log("目前選項數量：", cardSelect.options.length);
+        //console.log("5. 下拉選單選項：", cardSelect.innerHTML);
 
     } catch (error) {
         console.error("載入信用卡失敗：", error);
@@ -150,7 +150,7 @@ async function loadMonths(cardId) {
 
 // ==============================
 // 5. 取得指定月份的消費明細
-// GET /api/card-statements
+// GET /api/get_card_statements
 // ==============================
 async function loadStatements(cardId, month) {
   resultArea.classList.add("d-none");
@@ -159,7 +159,7 @@ async function loadStatements(cardId, month) {
   setStatus("正在載入消費明細...", "info");
 
   const data = await apiGet(
-    `/api/card-statements?card_id=${encodeURIComponent(cardId)}` +
+    `/api/get_card_statements?card_id=${encodeURIComponent(cardId)}` +
     `&statement_period=${encodeURIComponent(month)}`
   );
 
