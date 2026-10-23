@@ -94,7 +94,9 @@ async function loadCards() {
             option.textContent = cardName;
             cardSelect.appendChild(option);
         });
-
+        
+        // 所有信用卡加入後，解除下拉選單停用
+        cardSelect.disabled = false;
         console.log("5. 下拉選單選項：", cardSelect.innerHTML);
 
     } catch (error) {
