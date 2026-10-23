@@ -184,7 +184,7 @@ async function loadStatements(cardId, month) {
 
   const data = await apiGet(
     `/api/card_statements?card_id=${encodeURIComponent(cardId)}` +
-    `&statement_period=${encodeURIComponent(month)}`
+    `&billing_month=${encodeURIComponent(month)}`
   );
 
   // 預期格式：
