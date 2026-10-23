@@ -150,7 +150,7 @@ async function loadMonths(cardId) {
 
 // ==============================
 // 5. 取得指定月份的消費明細
-// GET /api/get_card_statements
+// GET /api/card_statements
 // ==============================
 async function loadStatements(cardId, month) {
   resultArea.classList.add("d-none");
@@ -159,7 +159,7 @@ async function loadStatements(cardId, month) {
   setStatus("正在載入消費明細...", "info");
 
   const data = await apiGet(
-    `/api/get_card_statements?card_id=${encodeURIComponent(cardId)}` +
+    `/api/card_statements?card_id=${encodeURIComponent(cardId)}` +
     `&statement_period=${encodeURIComponent(month)}`
   );
 
