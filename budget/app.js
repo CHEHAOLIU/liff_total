@@ -6,13 +6,13 @@ console.log("APP JS LOADED");
 
 async function init() {
 
-    console.log("A. 開始初始化");
+    //console.log("A. 開始初始化");
 
     await liff.init({
         liffId: "2009933896-IKoH3PQY"
     });
 
-    console.log("B. LIFF 初始化完成");
+    //console.log("B. LIFF 初始化完成");
 
     if (!liff.isLoggedIn()) {
         liff.login();
@@ -21,13 +21,13 @@ async function init() {
 
     profile = await liff.getProfile();
     idToken = liff.getIDToken();
-    console.log("C. 使用者資料取得完成");
+    //console.log("C. 使用者資料取得完成");
 
     await loadCategories();
-    console.log("D. 分類載入完成");
+    //console.log("D. 分類載入完成");
 
     await loadBudget();  
-    console.log("E. 預算載入完成"); 
+    //console.log("E. 預算載入完成"); 
 }
 
 init();
@@ -101,8 +101,8 @@ async function loadCategories() {
 // ======================== 
 async function loadBudget() {
     try {
-        console.log("① 開始載入預算");
-        console.log("② idToken 是否存在：", !!idToken);
+        //console.log("① 開始載入預算");
+        //console.log("② idToken 是否存在：", !!idToken);
 
         const res = await fetch(
             "https://line-bot-on-render-combine-one-singapore.onrender.com/api/budget",
@@ -114,13 +114,13 @@ async function loadBudget() {
             }
         );
 
-        console.log("③ API HTTP 狀態：", res.status);
+       // console.log("③ API HTTP 狀態：", res.status);
 
         const data = await res.json();
 
         // 只記錄預算資料，不要輸出 Token
-        console.log("④ API 回傳資料：", data);
-        console.log("⑤ 分類清單：", categories);
+       // console.log("④ API 回傳資料：", data);
+       // console.log("⑤ 分類清單：", categories);
 
         const budgets = data.budgets || {};
 
@@ -138,10 +138,10 @@ async function loadBudget() {
 
         updateTotal();
 
-        console.log("⑥ 預算載入完成");
+        //console.log("⑥ 預算載入完成");
 
     } catch (error) {
-        console.error("載入預算失敗：", error);
+        //console.error("載入預算失敗：", error);
     }
 }
 
@@ -155,14 +155,14 @@ async function loadBudget() {
 //========================
 function updateTotal() {
      
-    console.log("income-total:",
-    document.getElementById("income-total"));
+    //console.log("income-total:",
+    //document.getElementById("income-total"));
 
-    console.log("expense-total:",
-    document.getElementById("expense-total"));
+   //console.log("expense-total:",
+    //document.getElementById("expense-total"));
 
-    console.log("balance-total:",
-    document.getElementById("balance-total"));
+    //console.log("balance-total:",
+    //document.getElementById("balance-total"));
 
     let incomeTotal = 0;
     let expenseTotal = 0;
@@ -188,7 +188,7 @@ function updateTotal() {
     document.getElementById("balance-total").innerText =
         (incomeTotal - expenseTotal).toLocaleString();
 
-        
+
 }
 
 
