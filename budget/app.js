@@ -19,6 +19,7 @@ async function init() {
     idToken = liff.getIDToken();
 
     await loadCategories();
+    await loadBudget();   
 }
 
 init();
@@ -85,6 +86,64 @@ async function loadCategories() {
     updateTotal();
 
 }
+
+
+// ========================
+//    載入已儲存的預算
+// ======================== 
+async function loadBudget() {
+
+    try {
+
+        const res = await fetch(
+            "https://line-bot-on-render-combine-one-singapore.onrender.com/api/budget",
+            {
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer ${idToken}`
+                }
+            }
+        );
+
+        if (!res.ok) {
+            throw new Error(`載入預算失敗：HTTP ${res.status}`);
+        }
+
+        const data = await res.json();
+
+        // 取得已儲存的預算；沒有資料時使用空物件
+        const budgets = data.budgets || {};
+
+        // 將金額填入對應分類
+        categories.forEach(c => {
+
+            const input = document.getElementById(c.categories);
+
+            if (!input) return;
+
+            const amount = Number(budgets[c.categories]) || 0;
+
+            input.value = amount.toLocaleString();
+
+        });
+
+        // 更新收入、支出及結餘總額
+        updateTotal();
+
+    } catch (error) {
+
+        console.error("載入預算錯誤：", error);
+
+        document.getElementById("status").innerText =
+            "預算載入失敗，請重新整理頁面";
+
+    }
+
+}
+
+
+
+
 
 
 //========================
