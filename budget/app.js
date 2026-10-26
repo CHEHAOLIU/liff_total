@@ -92,11 +92,12 @@ async function loadCategories() {
 //    載入已儲存的預算
 // ======================== 
 async function loadBudget() {
-
     try {
+        console.log("① 開始載入預算");
+        console.log("② idToken 是否存在：", !!idToken);
 
         const res = await fetch(
-            "https://line-bot-on-render-combine-one-singapore.onrender.com/api/budget",
+            "你的 /api/budget 網址",
             {
                 method: "GET",
                 headers: {
@@ -105,40 +106,35 @@ async function loadBudget() {
             }
         );
 
-        if (!res.ok) {
-            throw new Error(`載入預算失敗：HTTP ${res.status}`);
-        }
+        console.log("③ API HTTP 狀態：", res.status);
 
         const data = await res.json();
 
-        // 取得已儲存的預算；沒有資料時使用空物件
+        // 只記錄預算資料，不要輸出 Token
+        console.log("④ API 回傳資料：", data);
+        console.log("⑤ 分類清單：", categories);
+
         const budgets = data.budgets || {};
 
-        // 將金額填入對應分類
         categories.forEach(c => {
-
             const input = document.getElementById(c.categories);
 
-            if (!input) return;
+            if (!input) {
+                console.warn("找不到分類輸入欄位：", c.categories);
+                return;
+            }
 
             const amount = Number(budgets[c.categories]) || 0;
-
             input.value = amount.toLocaleString();
-
         });
 
-        // 更新收入、支出及結餘總額
         updateTotal();
 
+        console.log("⑥ 預算載入完成");
+
     } catch (error) {
-
-        console.error("載入預算錯誤：", error);
-
-        document.getElementById("status").innerText =
-            "預算載入失敗，請重新整理頁面";
-
+        console.error("載入預算失敗：", error);
     }
-
 }
 
 
