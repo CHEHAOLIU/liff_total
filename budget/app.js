@@ -154,7 +154,16 @@ async function loadBudget() {
 // 更新收入、支出總額
 //========================
 function updateTotal() {
+     
+    console.log("income-total:",
+    document.getElementById("income-total"));
 
+    console.log("expense-total:",
+    document.getElementById("expense-total"));
+
+    console.log("balance-total:",
+    document.getElementById("balance-total"));
+    
     let incomeTotal = 0;
     let expenseTotal = 0;
 
