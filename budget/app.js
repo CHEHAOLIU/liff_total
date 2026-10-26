@@ -6,9 +6,13 @@ console.log("APP JS LOADED");
 
 async function init() {
 
+    console.log("A. 開始初始化");
+
     await liff.init({
         liffId: "2009933896-IKoH3PQY"
     });
+
+    console.log("B. LIFF 初始化完成");
 
     if (!liff.isLoggedIn()) {
         liff.login();
@@ -17,9 +21,13 @@ async function init() {
 
     profile = await liff.getProfile();
     idToken = liff.getIDToken();
+    console.log("C. 使用者資料取得完成");
 
     await loadCategories();
-    await loadBudget();   
+    console.log("D. 分類載入完成");
+
+    await loadBudget();  
+    console.log("E. 預算載入完成"); 
 }
 
 init();
