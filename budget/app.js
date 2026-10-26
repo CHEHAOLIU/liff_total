@@ -163,7 +163,7 @@ function updateTotal() {
 
     console.log("balance-total:",
     document.getElementById("balance-total"));
-    
+
     let incomeTotal = 0;
     let expenseTotal = 0;
 
@@ -188,6 +188,7 @@ function updateTotal() {
     document.getElementById("balance-total").innerText =
         (incomeTotal - expenseTotal).toLocaleString();
 
+        
 }
 
 
