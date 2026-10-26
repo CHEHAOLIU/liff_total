@@ -97,7 +97,7 @@ async function loadBudget() {
         console.log("② idToken 是否存在：", !!idToken);
 
         const res = await fetch(
-            "你的 /api/budget 網址",
+            "https://line-bot-on-render-combine-one-singapore.onrender.com/api/budget",
             {
                 method: "GET",
                 headers: {
