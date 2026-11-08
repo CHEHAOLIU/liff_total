@@ -26,7 +26,7 @@
 
   <!-- JS -->
   <script 
-    src="app.js?v=20260712v2" 
+    src="app.js?v=20261108v3" 
     defer>
   </script>
 
@@ -41,163 +41,221 @@
 
 
   <h4 class="mb-3 text-center">
-    💰 預算設定
+    💰 預算管理
   </h4>
+  <!-- 頁面切換 -->
+  <div class="btn-group w-100 mb-4" role="group">
+
+    <button
+      id="btn-setting"
+      class="btn btn-primary"
+      onclick="switchTab('setting')">
+      ⚙️ 預算設定
+    </button>
+
+    <button
+      id="btn-progress"
+      class="btn btn-outline-primary"
+      onclick="switchTab('progress')">
+      📊 使用狀況
+    </button>
+
+  </div>
+   
+  <div id="setting-view"></div>
+
+    <!-- ================= -->
+    <!-- 收入預算 -->
+    <!-- ================= -->
+
+    <div class="budget-section income-section">
 
 
-
-  <!-- ================= -->
-  <!-- 收入預算 -->
-  <!-- ================= -->
-
-  <div class="budget-section income-section">
+      <h5 class="section-title">
+        🟢 收入預算
+      </h5>
 
 
-    <h5 class="section-title">
-      🟢 收入預算
-    </h5>
+      <div 
+        id="income-form"
+        class="border rounded p-2">
+
+      </div>
 
 
-    <div 
-      id="income-form"
-      class="border rounded p-2">
+      <div 
+        class="total-box income-total-box d-flex justify-content-between mt-2">
+
+        <strong>
+          收入合計
+        </strong>
+
+
+        <strong id="income-total">
+          0
+        </strong>
+
+      </div>
+
 
     </div>
 
 
+
+
+
+    <!-- ================= -->
+    <!-- 支出預算 -->
+    <!-- ================= -->
+
+
+    <div class="budget-section expense-section mt-4">
+
+
+      <h5 class="section-title">
+        🔴 支出預算
+      </h5>
+
+
+      <div 
+        id="expense-form"
+        class="border rounded p-2">
+
+      </div>
+
+
+      <div 
+        class="total-box expense-total-box d-flex justify-content-between mt-2">
+
+        <strong>
+          支出合計
+        </strong>
+
+
+        <strong id="expense-total">
+          0
+        </strong>
+
+      </div>
+
+
+    </div>
+
+
+
+
+
+    <!-- ================= -->
+    <!-- 總結 -->
+    <!-- ================= -->
+
+
     <div 
-      class="total-box income-total-box d-flex justify-content-between mt-2">
+      class="total-box d-flex justify-content-between mt-4">
+
 
       <strong>
-        收入合計
+        每月預算淨額
       </strong>
 
 
-      <strong id="income-total">
+      <strong id="balance-total">
         0
       </strong>
 
+
+    </div>
+
+
+
+  <!-- ================= -->
+  <!-- 收入、支出與結餘 -->
+  <!-- ================= -->
+  <!--
+  <div class="total-box d-flex justify-content-between mt-3">
+      <strong>收入合計</strong>
+      <strong id="income-total">0</strong>
+  </div>
+
+  <div class="total-box d-flex justify-content-between mt-2">
+      <strong>支出合計</strong>
+      <strong id="expense-total">0</strong>
+  </div>
+
+  <div class="total-box d-flex justify-content-between mt-2">
+      <strong>每月結餘</strong>
+      <strong id="balance-total">0</strong>
+  </div>
+  -->
+
+
+
+
+
+    <!-- 儲存 -->
+
+    <button 
+      class="btn btn-primary w-100 mt-3"
+      onclick="submitBudget()">
+
+      💾 儲存
+
+    </button>
+
+
+
+
+    <!-- 狀態 -->
+
+    <div 
+      id="status"
+      class="mt-3 text-center text-success">
+
     </div>
 
 
   </div>
 
-
-
-
-
   <!-- ================= -->
-  <!-- 支出預算 -->
+  <!-- 預算使用狀況 -->
   <!-- ================= -->
 
+  <div id="progress-view" style="display:none;">
 
-  <div class="budget-section expense-section mt-4">
-
-
-    <h5 class="section-title">
-      🔴 支出預算
+    <h5 class="mb-3">
+      📊 本月預算執行狀況
     </h5>
 
+    <div id="progress-month"
+        class="text-muted mb-3">
+    </div>
 
-    <div 
-      id="expense-form"
-      class="border rounded p-2">
+    <!-- 收入進度 -->
+    <div class="card p-3 mb-3">
+
+      <h5>🟢 收入達成率</h5>
+
+      <div id="income-progress"></div>  
 
     </div>
 
+    <!-- 支出進度 -->
+    <div class="card p-3 mb-3">
 
-    <div 
-      class="total-box expense-total-box d-flex justify-content-between mt-2">
+      <h5>🔴 支出使用率</h5>
 
-      <strong>
-        支出合計
-      </strong>
-
-
-      <strong id="expense-total">
-        0
-      </strong>
+      <div id="expense-progress"></div>
 
     </div>
+    
+    
+
 
 
   </div>
 
 
-
-
-
-  <!-- ================= -->
-  <!-- 總結 -->
-  <!-- ================= -->
-
-
-  <div 
-    class="total-box d-flex justify-content-between mt-4">
-
-
-    <strong>
-      每月預算淨額
-    </strong>
-
-
-    <strong id="balance-total">
-      0
-    </strong>
-
-
-  </div>
-
-
-
-<!-- ================= -->
-<!-- 收入、支出與結餘 -->
-<!-- ================= -->
-<!--
-<div class="total-box d-flex justify-content-between mt-3">
-    <strong>收入合計</strong>
-    <strong id="income-total">0</strong>
 </div>
-
-<div class="total-box d-flex justify-content-between mt-2">
-    <strong>支出合計</strong>
-    <strong id="expense-total">0</strong>
-</div>
-
-<div class="total-box d-flex justify-content-between mt-2">
-    <strong>每月結餘</strong>
-    <strong id="balance-total">0</strong>
-</div>
--->
-
-
-
-
-
-  <!-- 儲存 -->
-
-  <button 
-    class="btn btn-primary w-100 mt-3"
-    onclick="submitBudget()">
-
-    💾 儲存
-
-  </button>
-
-
-
-
-  <!-- 狀態 -->
-
-  <div 
-    id="status"
-    class="mt-3 text-center text-success">
-
-  </div>
-
-
-</div>
-
 
 </body>
 

@@ -224,3 +224,139 @@ async function submitBudget() {
     document.getElementById("status").innerText = "✅ 已儲存";
 
 }
+
+// ========================
+// 頁面切換
+// ========================
+
+async function switchTab(tab) {
+
+    const settingView =
+        document.getElementById("setting-view");
+
+    const progressView =
+        document.getElementById("progress-view");
+
+    const btnSetting =
+        document.getElementById("btn-setting");
+
+    const btnProgress =
+        document.getElementById("btn-progress");
+
+    if (tab === "setting") {
+
+        settingView.style.display = "block";
+        progressView.style.display = "none";
+
+        btnSetting.className = "btn btn-primary";
+        btnProgress.className = "btn btn-outline-primary";
+
+    } else {
+
+        settingView.style.display = "none";
+        progressView.style.display = "block";
+
+        btnSetting.className = "btn btn-outline-primary";
+        btnProgress.className = "btn btn-primary";
+
+        await loadBudgetProgress();
+    }
+}
+
+// ========================
+// 顯示預算使用進度
+// ========================
+function renderProgress(data) {
+
+    const container = document.getElementById("progress-content");
+
+    container.innerHTML = "";
+
+    const types = ["收入", "支出"];
+
+    types.forEach(type => {
+
+        const section = document.createElement("div");
+
+        section.innerHTML = `<h5>${type}預算使用狀況</h5>`;
+
+        categories
+            .filter(c => c.type === type)
+            .forEach(c => {
+
+                const budget = Number(
+                    data.budgets?.[type]?.[c.categories]
+                ) || 0;
+
+                const actual = Number(
+                    data.actuals?.[type]?.[c.categories]
+                ) || 0;
+
+                const percent = budget > 0
+                    ? actual / budget * 100
+                    : 0;
+
+                const displayPercent = Math.round(percent);
+
+                const item = document.createElement("div");
+
+                item.className = "mb-3";
+
+                item.innerHTML = `
+                    <div class="d-flex justify-content-between">
+                        <strong>${c.categories}</strong>
+                        <span>${actual.toLocaleString()} / ${budget.toLocaleString()}</span>
+                    </div>
+
+                    <div class="progress">
+                        <div class="progress-bar"
+                             role="progressbar"
+                             style="width: ${Math.min(percent, 100)}%">
+                        </div>
+                    </div>
+
+                    <small>${displayPercent}%</small>
+                `;
+
+                section.appendChild(item);
+
+            });
+
+        container.appendChild(section);
+
+    });
+
+}
+
+// ========================
+// 載入預算使用狀況
+// ========================
+async function loadBudgetProgress() {
+
+    try {
+
+        const res = await fetch(
+            "https://line-bot-on-render-combine-one-singapore.onrender.com/api/budget/progress",
+            {
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer ${idToken}`
+                }
+            }
+        );
+
+        const data = await res.json();
+
+        if (!res.ok) {
+            throw new Error(data.error || "載入失敗");
+        }
+
+        renderProgress(data);
+
+    } catch (error) {
+
+        console.error("載入預算使用狀況失敗：", error);
+
+    }
+
+}
