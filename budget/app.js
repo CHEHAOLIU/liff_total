@@ -266,30 +266,45 @@ async function switchTab(tab) {
 // ========================
 // 顯示預算使用進度
 // ========================
-function renderProgress(data) {
+function renderProgress(data, budgetData) {
 
-    const container = document.getElementById("progress-content");
+    const incomeContainer =
+        document.getElementById("income-progress");
 
-    container.innerHTML = "";
+    const expenseContainer =
+        document.getElementById("expense-progress");
 
-    const types = ["收入", "支出"];
+    const monthContainer =
+        document.getElementById("progress-month");
 
-    types.forEach(type => {
+    // 清空舊資料
+    incomeContainer.innerHTML = "";
+    expenseContainer.innerHTML = "";
 
-        const section = document.createElement("div");
+    // 顯示月份
+    monthContainer.innerText = `統計月份：${data.month}`;
 
-        section.innerHTML = `<h5>${type}預算使用狀況</h5>`;
+    // 取得預算與實際金額
+    const budgets = budgetData.budgets || {};
+    const actuals = data.actuals || {};
+
+    // 分別處理收入與支出
+    ["收入", "支出"].forEach(type => {
+
+        const container = type === "收入"
+            ? incomeContainer
+            : expenseContainer;
 
         categories
             .filter(c => c.type === type)
             .forEach(c => {
 
-                const budget = Number(
-                    data.budgets?.[type]?.[c.categories]
-                ) || 0;
+                const category = c.categories;
+
+                const budget = Number(budgets[category]) || 0;
 
                 const actual = Number(
-                    data.actuals?.[type]?.[c.categories]
+                    actuals[type]?.[category]
                 ) || 0;
 
                 const percent = budget > 0
@@ -299,30 +314,37 @@ function renderProgress(data) {
                 const displayPercent = Math.round(percent);
 
                 const item = document.createElement("div");
-
                 item.className = "mb-3";
 
+                const barColor = type === "收入"
+                    ? "bg-success"
+                    : (percent > 100 ? "bg-danger" : "bg-primary");
+
                 item.innerHTML = `
-                    <div class="d-flex justify-content-between">
-                        <strong>${c.categories}</strong>
-                        <span>${actual.toLocaleString()} / ${budget.toLocaleString()}</span>
+                    <div class="d-flex justify-content-between mb-1">
+                        <strong>${category}</strong>
+                        <span>
+                            ${actual.toLocaleString()} /
+                            ${budget.toLocaleString()}
+                        </span>
                     </div>
 
-                    <div class="progress">
-                        <div class="progress-bar"
-                             role="progressbar"
-                             style="width: ${Math.min(percent, 100)}%">
+                    <div class="progress" style="height: 12px;">
+                        <div
+                            class="progress-bar ${barColor}"
+                            role="progressbar"
+                            style="width: ${Math.min(percent, 100)}%">
                         </div>
                     </div>
 
-                    <small>${displayPercent}%</small>
+                    <small class="text-muted">
+                        ${displayPercent}%
+                    </small>
                 `;
 
-                section.appendChild(item);
+                container.appendChild(item);
 
             });
-
-        container.appendChild(section);
 
     });
 
@@ -335,27 +357,47 @@ async function loadBudgetProgress() {
 
     try {
 
-        const res = await fetch(
-            "https://line-bot-on-render-combine-one-singapore.onrender.com/api/budget/progress",
-            {
+        const baseUrl =
+            "https://line-bot-on-render-combine-one-singapore.onrender.com";
+
+        // 同時取得實際收支與預算資料
+        const [progressRes, budgetRes] = await Promise.all([
+
+            fetch(`${baseUrl}/api/budget/progress`, {
                 method: "GET",
                 headers: {
                     "Authorization": `Bearer ${idToken}`
                 }
-            }
-        );
+            }),
 
-        const data = await res.json();
+            fetch(`${baseUrl}/api/budget`, {
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer ${idToken}`
+                }
+            })
 
-        if (!res.ok) {
-            throw new Error(data.error || "載入失敗");
+        ]);
+
+        const progressData = await progressRes.json();
+        const budgetData = await budgetRes.json();
+
+        if (!progressRes.ok) {
+            throw new Error(progressData.error || "取得實際收支失敗");
         }
 
-        renderProgress(data);
+        if (!budgetRes.ok) {
+            throw new Error(budgetData.error || "取得預算資料失敗");
+        }
+
+        renderProgress(progressData, budgetData);
 
     } catch (error) {
 
         console.error("載入預算使用狀況失敗：", error);
+
+        document.getElementById("progress-month").innerText =
+            "預算資料載入失敗，請稍後再試。";
 
     }
 
