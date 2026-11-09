@@ -353,7 +353,7 @@ function renderProgress(data, budgetData) {
 // ========================
 // 載入預算使用狀況
 // ========================
-async function loadBudgetProgress() {
+async function loadBudgetProgress(month) {
 
     try {
 
@@ -363,7 +363,7 @@ async function loadBudgetProgress() {
         // 同時取得實際收支與預算資料
         const [progressRes, budgetRes] = await Promise.all([
 
-            fetch(`${baseUrl}/api/budget/progress`, {
+            fetch(`${baseUrl}/api/budget/progress?month=${month}`, {
                 method: "GET",
                 headers: {
                     "Authorization": `Bearer ${idToken}`
@@ -401,4 +401,41 @@ async function loadBudgetProgress() {
 
     }
 
+}
+
+// ========================
+// 增加月份選單初始化
+// ========================
+function initProgressMonth() {
+
+    const select = document.getElementById(
+        "progress-month-select"
+    );
+
+    const now = new Date();
+
+    for (let i = 0; i < 36; i++) {
+
+        const d = new Date(
+            now.getFullYear(),
+            now.getMonth() - i,
+            1
+        );
+
+        const month =
+            `${d.getFullYear()}-${String(
+                d.getMonth() + 1
+            ).padStart(2, "0")}`;
+
+        const option = document.createElement("option");
+
+        option.value = month;
+        option.textContent = month;
+
+        select.appendChild(option);
+    }
+
+    select.addEventListener("change", function() {
+        loadBudgetProgress(this.value);
+    });
 }
