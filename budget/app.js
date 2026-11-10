@@ -258,8 +258,10 @@ async function switchTab(tab) {
 
         btnSetting.className = "btn btn-outline-primary";
         btnProgress.className = "btn btn-primary";
+        
+        const month = document.getElementById( "progress-month-select").value;
 
-        await loadBudgetProgress();
+        await loadBudgetProgress(month);
     }
 }
 
@@ -274,15 +276,15 @@ function renderProgress(data, budgetData) {
     const expenseContainer =
         document.getElementById("expense-progress");
 
-    const monthContainer =
-        document.getElementById("progress-month");
+    //const monthContainer =
+    //    document.getElementById("progress-month");
 
     // 清空舊資料
     incomeContainer.innerHTML = "";
     expenseContainer.innerHTML = "";
 
     // 顯示月份
-    monthContainer.innerText = `統計月份：${data.month}`;
+    //monthContainer.innerText = `統計月份：${data.month}`;
 
     // 取得預算與實際金額
     const budgets = budgetData.budgets || {};
@@ -396,8 +398,10 @@ async function loadBudgetProgress(month) {
 
         console.error("載入預算使用狀況失敗：", error);
 
-        document.getElementById("progress-month").innerText =
+        document.getElementById("income-progress").innerHTML =
             "預算資料載入失敗，請稍後再試。";
+
+        document.getElementById("expense-progress").innerHTML = "";
 
     }
 
@@ -411,6 +415,10 @@ function initProgressMonth() {
     const select = document.getElementById(
         "progress-month-select"
     );
+
+    console.log("月份選單元素：", select);
+
+    select.innerHTML = "";
 
     const now = new Date();
 
