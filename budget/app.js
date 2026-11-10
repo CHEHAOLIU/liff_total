@@ -418,7 +418,7 @@ function initProgressMonth() {
         "progress-month-select"
     );
 
-    console.log("月份選單元素：", select);
+    //console.log("月份選單元素：", select);
 
     select.innerHTML = "";
 
