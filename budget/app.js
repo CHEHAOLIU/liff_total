@@ -23,6 +23,8 @@ async function init() {
     idToken = liff.getIDToken();
     //console.log("C. 使用者資料取得完成");
 
+    initProgressMonth();
+
     await loadCategories();
     //console.log("D. 分類載入完成");
 
