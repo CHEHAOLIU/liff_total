@@ -385,6 +385,10 @@ async function loadBudgetProgress(month) {
 
         const progressData = await progressRes.json();
         const budgetData = await budgetRes.json();
+        
+        console.log("目前選擇月份：", month);
+        console.log("後端回傳月份：", progressData.month);
+        console.log("後端回傳實際金額：", progressData.actuals);
 
         if (!progressRes.ok) {
             throw new Error(progressData.error || "取得實際收支失敗");
