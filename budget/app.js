@@ -310,6 +310,11 @@ function renderProgress(data, budgetData) {
                 const actual = Number(
                     actuals[type]?.[category]
                 ) || 0;
+                
+                // 預算與實際金額都是 0，就不顯示
+                if (budget === 0 && actual === 0) {
+                    return;
+                }
 
                 const percent = budget > 0
                     ? actual / budget * 100
@@ -386,9 +391,9 @@ async function loadBudgetProgress(month) {
         const progressData = await progressRes.json();
         const budgetData = await budgetRes.json();
         
-        console.log("目前選擇月份：", month);
-        console.log("後端回傳月份：", progressData.month);
-        console.log("後端回傳實際金額：", progressData.actuals);
+        //console.log("目前選擇月份：", month);
+        //console.log("後端回傳月份：", progressData.month);
+        //console.log("後端回傳實際金額：", progressData.actuals);
 
         if (!progressRes.ok) {
             throw new Error(progressData.error || "取得實際收支失敗");
